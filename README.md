@@ -2,7 +2,7 @@
 
 A neon arcade survival game built with HTML, CSS, JavaScript, and the Canvas and Web Audio APIs.
 
-Dodge debris, collect energy, build combos, and unlock abilities, ship skins, and trails. Includes four difficulties, boss formations, daily missions, achievements, and 30 pilot levels.
+Dodge debris, collect energy, build combos, and unlock abilities, ship skins, and trails. Includes four difficulties, boss formations, daily missions, achievements, and 30 pilot levels. [Neon Drift](https://albertinothecoder.github.io/Neon-Drift/)
 
 ## Play Online
 
