@@ -48,6 +48,17 @@
   <style>
     .menu-buttons{flex-wrap:wrap}.mission-list{display:grid;gap:10px}.mission-item{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:14px;border:1px solid rgba(147,165,205,.14);background:rgba(255,255,255,.025)}.mission-item.complete{border-color:rgba(247,215,86,.4);background:rgba(247,215,86,.045)}.mission-copy strong{font-size:11px;letter-spacing:.07em}.mission-copy p{margin:4px 0 9px;color:#74809b;font-size:9px}.mission-copy>div{height:5px;background:#08101e;border:1px solid rgba(147,165,205,.16);overflow:hidden}.mission-copy i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));box-shadow:0 0 10px rgba(32,231,207,.4)}.mission-date{color:var(--gold)!important}.trail-shop-item .shop-icon{font-size:23px;text-shadow:0 0 13px currentColor}@media(max-width:480px){.mission-item{grid-template-columns:1fr}.mission-item .buy-button{width:100%}}
   </style>
+  <style>
+    @media (min-width:721px) {
+      header{height:54px}
+      footer{min-height:38px}
+      .shell{width:min(calc(100% - 32px),calc((100svh - 184px) * 1.607142857));margin:12px auto}
+      canvas{width:100%;height:auto;max-height:none;aspect-ratio:900/560}
+    }
+    @media (min-width:721px) and (max-height:700px) {
+      .shell{width:min(calc(100% - 24px),calc((100svh - 132px) * 1.607142857))}
+    }
+  </style>
 </head>
 <body><div style="position:fixed;top:0;left:0;right:0;z-index:9999;text-align:center;background:#101b30;color:#d9fffa;font:12px system-ui;padding:5px">PRACTICE · No online rewards · <a href="index.html" style="color:#42efda">Back to account</a></div><div class="page">
   <header><div class="brand"><span class="mark">ϟ</span>NEON DRIFT</div><div class="actions"><span class="pilot-level">PILOT LEVEL <strong id="playerLevel">0</strong></span><span class="best">PERSONAL BEST <strong id="best">00000</strong></span><button class="settings-button" id="settingsButton" aria-label="Open settings">⚙</button></div></header>
