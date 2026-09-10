@@ -4,6 +4,12 @@ A neon arcade survival game built with HTML, CSS, JavaScript, and the Canvas and
 
 Dodge debris, collect energy, build combos, and unlock abilities, ship skins, and trails. Includes four difficulties, boss formations, daily missions, achievements, and 30 pilot levels.
 
+## Play Online
+
+Open [Neon Drift Online](https://albertino21gorilla.github.io/Neon-Drift/neon-drift-online/), click **Continue with Google**, and log in with your Google account. Then choose **Play online** to start!
+
+Completed-run rewards and purchases are saved to your account. Wait for **Saved to your account ✓** before leaving after a run. During the login testing phase, only accounts added as Google test users can sign in.
+
 ## Play locally
 
 With Python installed, run this command from the game folder:
@@ -21,7 +27,7 @@ Open http://localhost:4173 in your browser and choose Play local. No dependencie
 - Escape: pause
 - Settings: change key bindings and audio volumes
 
-Progress and purchases are saved in your browser's local storage. Music starts after your first interaction.
+In the local version, progress and purchases are saved in your browser's local storage, separately from your online account. Music starts after your first interaction.
 
 ## Source
 
