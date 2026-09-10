@@ -124,7 +124,7 @@
 </div>
 <div class="achievement-toast" id="achievementToast" role="status" aria-live="polite"><span>ACHIEVEMENT UNLOCKED</span><strong id="achievementToastName"></strong></div>
 <div class="level-up-celebration" id="levelUpCelebration" role="status" aria-live="polite"><div class="level-up-core"><span>LEVEL UP</span><strong id="levelUpNumber">1</strong><small id="levelUpCaption">PILOT RANK INCREASED</small></div></div>
-<script src="game.js?v=combos-bosses-missions-trails-pickups"></script><script type="text/plain">
+<script src="game.js?v=encoded-local-saves-v1"></script><script type="text/plain">
 (()=>{'use strict';
 const W=900,H=560,canvas=document.querySelector('#game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id),ui={score:$('score'),energy:$('energy'),level:$('level'),best:$('best'),overlay:$('overlay'),pause:$('pause'),ability:$('ability'),abilityFill:$('abilityFill'),abilityText:$('abilityText'),eyebrow:$('eyebrow'),title:$('title'),copy:$('copy'),final:$('final'),finalScore:$('finalScore'),action:$('action'),hints:$('hints'),sound:$('sound')};
 const keys=new Set();let status='ready',sound=true,last=performance.now(),pausedAt=0,best=+(localStorage.getItem('neon-drift-best')||0);ui.best.textContent=pad(best);function fresh(){return{player:{x:W/2,y:H-82,r:18},rocks:[],orbs:[],score:0,energy:0,level:1,lastRock:0,lastOrb:0,boostUntil:0,boostReadyAt:0}}let state=fresh();function pad(n){return Math.floor(n).toString().padStart(5,'0')}
