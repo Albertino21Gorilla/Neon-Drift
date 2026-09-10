@@ -1,52 +1,6 @@
 (() => {
   'use strict';
 
-  // Obfuscation only: browser-owned storage is not a trusted security boundary.
-  const localStorage = (() => {
-    const disk = window.localStorage;
-    const salt = 'q7V_2mR9.zP4';
-    function hash(value) {
-      let result = 2166136261;
-      for (const character of value) result = Math.imul(result ^ character.charCodeAt(0), 16777619);
-      return (result >>> 0).toString(36);
-    }
-    const alias = (key) => '_0x' + hash(salt + key);
-    function encode(value) {
-      const bytes = new TextEncoder().encode(String(value));
-      return btoa(Array.from(bytes, (byte, index) => String.fromCharCode(byte ^ salt.charCodeAt(index % salt.length))).join(''));
-    }
-    function decode(value) {
-      const bytes = Uint8Array.from(atob(value), (character, index) => character.charCodeAt(0) ^ salt.charCodeAt(index % salt.length));
-      return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-    }
-    function write(key, value) {
-      const payload = encode(value);
-      disk.setItem(alias(key), 'v1.' + hash(key + payload + salt) + '.' + payload);
-    }
-    return {
-      getItem(key) {
-        const saved = disk.getItem(alias(key));
-        if (saved !== null) {
-          try {
-            const [version, check, payload] = saved.split('.');
-            if (version !== 'v1' || check !== hash(key + payload + salt)) return null;
-            return decode(payload);
-          } catch { return null; }
-        }
-        const legacy = disk.getItem(key);
-        if (legacy !== null) {
-          // Remove the readable copy only after the encoded save succeeds.
-          write(key, legacy);
-          disk.removeItem(key);
-        }
-        return legacy;
-      },
-      setItem(key, value) {
-        write(key, value);
-        disk.removeItem(key);
-      },
-    };
-  })();
 
   const W = 900;
   const H = 560;
@@ -164,16 +118,16 @@
   };
 
   function loadJSON(key, fallback) {
-    try { return { ...fallback, ...JSON.parse(localStorage.getItem(key) || '{}') }; }
+    try { return { ...fallback, ...JSON.parse(_1sGsdG.getItem(key) || '{}') }; }
     catch { return { ...fallback }; }
   }
 
   let bindings = loadJSON('neon-drift-bindings', defaults);
   let mix = loadJSON('neon-drift-mix', { master: 80, music: 100, sfx: 75 });
-  if (!localStorage.getItem('neon-drift-music-100-v1')) {
+  if (!_1sGsdG.getItem('neon-drift-music-100-v1')) {
     mix.music = 100;
-    localStorage.setItem('neon-drift-mix', JSON.stringify(mix));
-    localStorage.setItem('neon-drift-music-100-v1', 'done');
+    _1sGsdG.setItem('neon-drift-mix', JSON.stringify(mix));
+    _1sGsdG.setItem('neon-drift-music-100-v1', 'done');
   }
   const keys = new Set();
   let status = 'ready';
@@ -186,41 +140,41 @@
   let waitingBind = null;
   let last = performance.now();
   let pausedAt = 0;
-  let best = +(localStorage.getItem('neon-drift-best') || 0);
-  let wallet = +(localStorage.getItem('neon-drift-energy') || 0);
-  let pointsWallet = +(localStorage.getItem('neon-drift-points') || 0);
-  const advancementsWereReset = localStorage.getItem('neon-drift-advancements-reset') === 'yes';
+  let best = +(_1sGsdG.getItem('neon-drift-best') || 0);
+  let wallet = +(_1sGsdG.getItem('neon-drift-energy') || 0);
+  let pointsWallet = +(_1sGsdG.getItem('neon-drift-points') || 0);
+  const advancementsWereReset = _1sGsdG.getItem('neon-drift-advancements-reset') === 'yes';
   let lifetimePoints = advancementsWereReset
-    ? +(localStorage.getItem('neon-drift-lifetime-points') || 0)
-    : Math.max(+(localStorage.getItem('neon-drift-lifetime-points') || 0), pointsWallet, best);
+    ? +(_1sGsdG.getItem('neon-drift-lifetime-points') || 0)
+    : Math.max(+(_1sGsdG.getItem('neon-drift-lifetime-points') || 0), pointsWallet, best);
   let unlockedAchievements = new Set();
-  try { JSON.parse(localStorage.getItem('neon-drift-achievements') || '[]').forEach((id) => unlockedAchievements.add(id)); } catch {}
+  try { JSON.parse(_1sGsdG.getItem('neon-drift-achievements') || '[]').forEach((id) => unlockedAchievements.add(id)); } catch {}
   let toastQueue = [];
   let toastActive = false;
   let levelUpTimer = null;
-  let energyMultiplier = +(localStorage.getItem('neon-drift-multiplier') || 1);
+  let energyMultiplier = +(_1sGsdG.getItem('neon-drift-multiplier') || 1);
   if (![1, ...multiplierTiers.map((tier) => tier.value)].includes(energyMultiplier)) energyMultiplier = 1;
-  let scoreMultiplier = +(localStorage.getItem('neon-drift-score-multiplier') || 1);
+  let scoreMultiplier = +(_1sGsdG.getItem('neon-drift-score-multiplier') || 1);
   if (![1, ...scoreMultiplierTiers.map((tier) => tier.value)].includes(scoreMultiplier)) scoreMultiplier = 1;
   let unlocked = new Set(['overdrive']);
-  try { JSON.parse(localStorage.getItem('neon-drift-abilities') || '[]').forEach((id) => unlocked.add(id)); } catch {}
-  let equipped = localStorage.getItem('neon-drift-equipped') || 'overdrive';
+  try { JSON.parse(_1sGsdG.getItem('neon-drift-abilities') || '[]').forEach((id) => unlocked.add(id)); } catch {}
+  let equipped = _1sGsdG.getItem('neon-drift-equipped') || 'overdrive';
   if (!abilities[equipped] || !unlocked.has(equipped)) equipped = 'overdrive';
   let unlockedSkins = new Set(Object.entries(skins).filter(([, skin]) => skin.cost === 0).map(([id]) => id));
-  try { JSON.parse(localStorage.getItem('neon-drift-skins') || '[]').forEach((id) => { if (skins[id]) unlockedSkins.add(id); }); } catch {}
-  let equippedSkin = localStorage.getItem('neon-drift-skin') || 'neon';
+  try { JSON.parse(_1sGsdG.getItem('neon-drift-skins') || '[]').forEach((id) => { if (skins[id]) unlockedSkins.add(id); }); } catch {}
+  let equippedSkin = _1sGsdG.getItem('neon-drift-skin') || 'neon';
   if (!skins[equippedSkin] || !unlockedSkins.has(equippedSkin)) equippedSkin = 'neon';
   let unlockedTrails = new Set(['pulse']);
-  try { JSON.parse(localStorage.getItem('neon-drift-trails') || '[]').forEach((id) => { if (trails[id]) unlockedTrails.add(id); }); } catch {}
-  let equippedTrail = localStorage.getItem('neon-drift-trail') || 'pulse';
+  try { JSON.parse(_1sGsdG.getItem('neon-drift-trails') || '[]').forEach((id) => { if (trails[id]) unlockedTrails.add(id); }); } catch {}
+  let equippedTrail = _1sGsdG.getItem('neon-drift-trail') || 'pulse';
   if (!trails[equippedTrail] || !unlockedTrails.has(equippedTrail)) equippedTrail = 'pulse';
   const dailyKey = new Date().toLocaleDateString('en-CA');
   let dailyState;
-  try { dailyState = JSON.parse(localStorage.getItem('neon-drift-daily') || 'null'); } catch { dailyState = null; }
+  try { dailyState = JSON.parse(_1sGsdG.getItem('neon-drift-daily') || 'null'); } catch { dailyState = null; }
   if (!dailyState || dailyState.date !== dailyKey) dailyState = { date: dailyKey, progress: { collector: 0, survivor: 0, combo: 0 }, claimed: [] };
   dailyState.progress = { collector: 0, survivor: 0, combo: 0, ...(dailyState.progress || {}) };
   if (!Array.isArray(dailyState.claimed)) dailyState.claimed = [];
-  let difficulty = localStorage.getItem('neon-drift-difficulty') || 'normal';
+  let difficulty = _1sGsdG.getItem('neon-drift-difficulty') || 'normal';
   if (!difficulties[difficulty]) difficulty = 'normal';
   let audio = null;
   let musicStep = 0;
@@ -273,7 +227,7 @@
     return scoreMultiplier * surgeMultiplier;
   }
   function comboMultiplier() { return 1 + Math.min(2, Math.floor(state.combo / 4) * 0.25); }
-  function saveDaily() { localStorage.setItem('neon-drift-daily', JSON.stringify(dailyState)); }
+  function saveDaily() { _1sGsdG.setItem('neon-drift-daily', JSON.stringify(dailyState)); }
   function advanceMission(id, amount) {
     const mission = dailyMissions.find((item) => item.id === id);
     if (!mission || dailyState.claimed.includes(id)) return;
@@ -622,9 +576,9 @@
     pointsWallet += score;
     lifetimePoints += score;
     const newPilotLevel = getPilotLevel();
-    localStorage.setItem('neon-drift-best', best);
-    localStorage.setItem('neon-drift-points', pointsWallet);
-    localStorage.setItem('neon-drift-lifetime-points', lifetimePoints);
+    _1sGsdG.setItem('neon-drift-best', best);
+    _1sGsdG.setItem('neon-drift-points', pointsWallet);
+    _1sGsdG.setItem('neon-drift-lifetime-points', lifetimePoints);
     checkAchievements();
     updateUI();
     if (newPilotLevel > previousPilotLevel) {
@@ -1092,7 +1046,7 @@
             })),
           });
           state.flashUntil = time + 130;
-          localStorage.setItem('neon-drift-energy', wallet); tone('orb'); return false;
+          _1sGsdG.setItem('neon-drift-energy', wallet); tone('orb'); return false;
         }
         return true;
       });
@@ -1114,7 +1068,7 @@
   }
 
   function saveBindings() {
-    localStorage.setItem('neon-drift-bindings', JSON.stringify(bindings));
+    _1sGsdG.setItem('neon-drift-bindings', JSON.stringify(bindings));
     updateBindingLabels();
   }
 
@@ -1147,7 +1101,7 @@
     document.querySelectorAll('[data-difficulty]').forEach((button) => {
       button.addEventListener('click', () => {
         difficulty = button.dataset.difficulty;
-        localStorage.setItem('neon-drift-difficulty', difficulty);
+        _1sGsdG.setItem('neon-drift-difficulty', difficulty);
         renderDifficulty(); tone('orb');
       });
     });
@@ -1164,7 +1118,7 @@
       input.value = mix[name]; output.textContent = `${mix[name]}%`;
       input.addEventListener('input', () => {
         mix[name] = +input.value; output.textContent = `${input.value}%`;
-        localStorage.setItem('neon-drift-mix', JSON.stringify(mix)); applyMix();
+        _1sGsdG.setItem('neon-drift-mix', JSON.stringify(mix)); applyMix();
       });
     });
     document.querySelectorAll('[data-bind]').forEach((button) => {
@@ -1180,16 +1134,16 @@
   }
 
   function saveShop() {
-    localStorage.setItem('neon-drift-energy', wallet);
-    localStorage.setItem('neon-drift-points', pointsWallet);
-    localStorage.setItem('neon-drift-abilities', JSON.stringify([...unlocked]));
-    localStorage.setItem('neon-drift-equipped', equipped);
-    localStorage.setItem('neon-drift-skin', equippedSkin);
-    localStorage.setItem('neon-drift-skins', JSON.stringify([...unlockedSkins]));
-    localStorage.setItem('neon-drift-trails', JSON.stringify([...unlockedTrails]));
-    localStorage.setItem('neon-drift-trail', equippedTrail);
-    localStorage.setItem('neon-drift-multiplier', energyMultiplier);
-    localStorage.setItem('neon-drift-score-multiplier', scoreMultiplier);
+    _1sGsdG.setItem('neon-drift-energy', wallet);
+    _1sGsdG.setItem('neon-drift-points', pointsWallet);
+    _1sGsdG.setItem('neon-drift-abilities', JSON.stringify([...unlocked]));
+    _1sGsdG.setItem('neon-drift-equipped', equipped);
+    _1sGsdG.setItem('neon-drift-skin', equippedSkin);
+    _1sGsdG.setItem('neon-drift-skins', JSON.stringify([...unlockedSkins]));
+    _1sGsdG.setItem('neon-drift-trails', JSON.stringify([...unlockedTrails]));
+    _1sGsdG.setItem('neon-drift-trail', equippedTrail);
+    _1sGsdG.setItem('neon-drift-multiplier', energyMultiplier);
+    _1sGsdG.setItem('neon-drift-score-multiplier', scoreMultiplier);
   }
 
   function renderSkins() {
@@ -1317,7 +1271,7 @@
     const achievement = achievements.find((item) => item.id === id);
     if (!achievement) return;
     unlockedAchievements.add(id);
-    localStorage.setItem('neon-drift-achievements', JSON.stringify([...unlockedAchievements]));
+    _1sGsdG.setItem('neon-drift-achievements', JSON.stringify([...unlockedAchievements]));
     if (!silent) { toastQueue.push(achievement); showNextToast(); }
     renderAchievements();
   }
@@ -1387,9 +1341,9 @@
   function confirmAchievementReset() {
     lifetimePoints = 0; lastShownPilotLevel = 0; unlockedAchievements.clear(); toastQueue = []; toastActive = false;
     ui.achievementToast.classList.remove('show');
-    localStorage.setItem('neon-drift-lifetime-points', '0');
-    localStorage.setItem('neon-drift-achievements', '[]');
-    localStorage.setItem('neon-drift-advancements-reset', 'yes');
+    _1sGsdG.setItem('neon-drift-lifetime-points', '0');
+    _1sGsdG.setItem('neon-drift-achievements', '[]');
+    _1sGsdG.setItem('neon-drift-advancements-reset', 'yes');
     updateUI(); renderAchievements(); concealMenu(ui.resetConfirm, () => ui.resetAchievements.focus());
   }
 
