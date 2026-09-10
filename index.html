@@ -2,18 +2,30 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Neon Drift · Choose your flight</title>
-<style>
-:root{color-scheme:dark;font-family:system-ui,sans-serif;color:#e7f6ff;background:#060b15}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(ellipse at top right,#14333e,transparent 65%),radial-gradient(ellipse at bottom left,#27163e,transparent 60%)}main{width:min(900px,100%);padding:64px 24px}.eyebrow{font-size:12px;letter-spacing:.25em;color:#42efda}h1{font-size:clamp(58px,12vw,100px);line-height:1;letter-spacing:-.06em;margin:25px 0}h1 em{font-style:normal;color:#42efda}p{color:#adbed1;line-height:1.6}.choices{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}a{display:block;text-decoration:none;color:inherit;background:#101a2ccc;border:1px solid #314056;border-radius:18px;padding:28px}a:hover,a:focus-visible{border-color:#42efda;outline:2px solid #42efda;outline-offset:3px}h2{margin:10px 0;font-size:28px}.tag{font-size:11px;letter-spacing:.2em;color:#42efda}.go{display:block;color:#42efda;margin-top:25px;font-weight:700}footer{margin-top:28px;color:#8295ae;font-size:12px}@media(max-width:560px){.choices{grid-template-columns:1fr}}@media(prefers-reduced-motion:no-preference){a{transition:transform .2s,border-color .2s}a:hover{transform:translateY(-4px)}}
-</style>
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Neon Drift · Online</title>
+<link rel="stylesheet" href="online.css">
 </head>
-<body><main>
-<span class="eyebrow">ARCADE SURVIVAL / NEON DRIFT</span>
-<h1>Choose your<br><em>flight.</em></h1>
-<p>Dodge the debris. Chase the glow. Make the next run yours.</p>
-<div class="choices">
-<a href="neon-drift-online/"><span class="tag">ACCOUNT PROGRESS</span><h2>Play online</h2><p>Sign in with Google and keep completed-run rewards and purchases in your account.</p><span class="go">Enter the drift →</span></a>
-<a href="neon-drift-local/"><span class="tag">NO SIGN-IN NEEDED</span><h2>Play local</h2><p>The original game. Progress stays in this browser, separate from your online account.</p><span class="go">Launch locally →</span></a>
-</div>
-<footer>Existing browser saves stay available in the local version on the same website.<br><a style="display:inline;background:none;border:0;padding:0;color:#42efda" href="privacy.html">Privacy Policy</a> · <a style="display:inline;background:none;border:0;padding:0;color:#42efda" href="terms.html">Terms of Service</a></footer>
-</main></body></html>
+<body>
+<main>
+  <span class="eyebrow">NEON DRIFT / ONLINE PREVIEW</span>
+  <h1>Your next<br><em>orbit.</em></h1>
+  <p>One pilot. One account. A whole universe ahead.</p>
+  <section class="card">
+    <p id="message" role="status" aria-live="polite">Connecting…</p>
+    <button id="login" hidden>Continue with Google ↗</button>
+    <div id="account" hidden>
+      <h2 id="pilot"></h2>
+      <div class="balances"><div><small>POINTS</small><strong id="points">—</strong></div><div><small>ENERGY</small><strong id="energy">—</strong></div></div>
+      <p>Online runs save points and energy when you finish. Purchases and equipment are saved to your account.</p>
+      <a class="button" href="play.html">Play online →</a>
+      <a class="button secondary" href="practice.html">Practice · no rewards</a>
+      <button id="logout" class="secondary">Sign out</button>
+    </div>
+    <button id="retry" class="secondary" hidden>Retry connection</button>
+  </section>
+  <footer>Your existing local progress stays separate. Online accounts start fresh.<br><a href="../privacy.html">Privacy Policy</a> · <a href="../terms.html">Terms of Service</a></footer>
+</main>
+<script type="module" src="online.js"></script>
+</body>
+</html>

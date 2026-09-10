@@ -6,7 +6,7 @@ Dodge debris, collect energy, build combos, and unlock abilities, ship skins, an
 
 ## Play Online
 
-Open [Neon Drift Online](https://albertino21gorilla.github.io/Neon-Drift/neon-drift-online/), click **Continue with Google**, and log in with your Google account. Then choose **Play online** to start!
+Open [Neon Drift Online](https://albertinothecoder.github.io/Neon-Drift/neon-drift-online/), click **Continue with Google**, and log in with your Google account. Then choose **Play online** to start!
 
 Completed-run rewards and purchases are saved to your account. Wait for **Saved to your account ✓** before leaving after a run. During the login testing phase, only accounts added as Google test users can sign in.
 
@@ -41,4 +41,4 @@ When updating the existing GitHub repository, upload the two folders plus this R
 
 ## Credits
 
-Created by Albertino21Gorilla with ChatGPT.
+Created by AlbertinoTheCoder with ChatGPT.
