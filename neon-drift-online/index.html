@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Neon Drift · Online</title>
+<link rel="stylesheet" href="online.css">
+</head>
+<body>
+<main>
+  <span class="eyebrow">NEON DRIFT / ONLINE PREVIEW</span>
+  <h1>Your next<br><em>orbit.</em></h1>
+  <p>One pilot. One account. A whole universe ahead.</p>
+  <section class="card">
+    <p id="message" role="status" aria-live="polite">Connecting…</p>
+    <button id="login" hidden>Continue with Google ↗</button>
+    <div id="account" hidden>
+      <h2 id="pilot"></h2>
+      <div class="balances"><div><small>POINTS</small><strong id="points">—</strong></div><div><small>ENERGY</small><strong id="energy">—</strong></div></div>
+      <p>Online rewards are not enabled yet. Practice runs do not change your account balance.</p>
+      <a class="button" href="practice.html">Play a practice run →</a>
+      <button id="logout" class="secondary">Sign out</button>
+    </div>
+    <button id="retry" class="secondary" hidden>Retry connection</button>
+  </section>
+  <footer>Your existing local progress stays separate. Online accounts start fresh.</footer>
+</main>
+<script type="module" src="online.js"></script>
+</body>
+</html>
