@@ -534,8 +534,9 @@
     oscillator.start(); oscillator.stop(ac.currentTime + 0.16);
   }
 
-  function start() {
+  async function start() {
     ensureAudio();
+    if (window.ndCloud && !await window.ndCloud.start(difficulty)) return;
     setMusicMode('game');
     unlockAchievement('played');
     state = fresh(); status = 'playing';
@@ -587,6 +588,10 @@
     }
     ui.best.textContent = pad(best); ui.finalScore.textContent = pad(score);
     show('SIGNAL LOST', 'Drift ended.', `Banked ${score.toLocaleString()} points and ${energyText(state.energy)} energy from this run.`, '↻ &nbsp; TRY AGAIN', true);
+    if (window.ndCloud) {
+      ui.copy.textContent = 'Run finished. Saving to your account…';
+      window.ndCloud.finish(score, state.energy, state.elapsedMs / 1000).then(() => { ui.copy.textContent = 'Check the online status above for your save result.'; });
+    }
     ui.menuButtons.hidden = false; ui.difficultyPicker.hidden = true; ui.shopButton.hidden = true; ui.skinsButton.hidden = true; ui.trailsButton.hidden = true; ui.missionsButton.hidden = true; ui.achievementsButton.hidden = true; ui.mainMenuButton.hidden = false;
   }
 
@@ -1022,7 +1027,7 @@
       state.debrisBursts = state.debrisBursts.filter((burst) => time - burst.started < 720);
       state.trail = state.trail.filter((point) => time - point.started < 520);
       const invulnerable = abilityActive && ['shield', 'quantum'].includes(equipped);
-      if (!invulnerable && state.rocks.some((rock) => Math.hypot(rock.x - player.x, rock.y - player.y) < rock.r + player.r - 4)) gameOver();
+      if (!invulnerable && state.rocks.some((rock) => Math.hypot(rock.x - player.x, rock.y - player.y) < rock.r + player.r - 4)) { gameOver(); state.orbs = []; }
       state.orbs = state.orbs.filter((orb) => {
         if (Math.hypot(orb.x - player.x, orb.y - player.y) < orb.r + player.r + 3) {
           incrementCombo(time);
@@ -1470,6 +1475,35 @@
     button.addEventListener('pointerdown', (event) => { event.preventDefault(); keys.add(key); });
     ['pointerup', 'pointerleave', 'pointercancel'].forEach((name) => button.addEventListener(name, () => keys.delete(key)));
   });
+
+
+  if (window.ndCloud) {
+    window.ndApplyProfile = (p) => {
+      best = Number(p.best_score); wallet = Number(p.energy); pointsWallet = Number(p.points);
+      lifetimePoints = Number(p.lifetime_points);
+      unlocked = new Set(p.inventory.ability); unlockedSkins = new Set(p.inventory.skin); unlockedTrails = new Set(p.inventory.trail);
+      equipped = p.equipped.ability; equippedSkin = p.equipped.skin; equippedTrail = p.equipped.trail;
+      energyMultiplier = [1,1.25,1.5,1.75,2,4,5][p.energy_tier];
+      scoreMultiplier = [1,1.25,1.5,1.75,2,4,5][p.score_tier];
+      ui.best.textContent = pad(best); updateUI(); updateBindingLabels(); checkAchievements();
+      renderShop(); renderSkins(); renderTrails(); renderAchievements();
+    };
+    // Capture before the offline purchase handlers: only RPCs may buy/equip.
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-skin],[data-trail],[data-ability],[data-multiplier],[data-score-multiplier],[data-mission],#resetAchievements,#confirmReset');
+      if (!button) return;
+      event.preventDefault(); event.stopImmediatePropagation();
+      if (button.disabled) return;
+      if (button.hasAttribute('data-mission') || ['resetAchievements','confirmReset'].includes(button.id)) {
+        alert('Online mission rewards and advancement resets are not enabled yet.'); return;
+      }
+      const fields = {skin:'skin',trail:'trail',ability:'ability',multiplier:'energy_tier',scoreMultiplier:'score_tier'};
+      for (const [key,kind] of Object.entries(fields)) if (button.dataset[key] !== undefined) {
+        window.ndCloud.buy(kind,button.dataset[key]); break;
+      }
+    }, true);
+    ui.resetAchievements.hidden = true;
+  }
 
   setupSettings();
   setupDifficulty();
