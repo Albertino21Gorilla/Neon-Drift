@@ -1,6 +1,6 @@
 const PROJECT_URL = 'https://pyxzktxzvoalyklpjgsm.supabase.co';
 const PUBLIC_KEY = 'sb_publishable_Ak3J64sxAfnH9fjwHE0wjg_k0e_4WaA';
-const RETURN_URL = 'https://albertino21gorilla.github.io/Neon-Drift/neon-drift-online/';
+const RETURN_URL = 'https://albertinothecoder.github.io/Neon-Drift/neon-drift-online/';
 const $ = id => document.getElementById(id);
 let client;
 let revision = 0;

@@ -15,15 +15,20 @@ async function scenario(){
  let banner;
  const context={Map,Number,String,Object,Error,Promise,console,
  mockImport:async()=>({createClient:()=>client}),location:{replace:()=>assert.fail('Unexpected redirect')},
- document:{createElement:()=>({style:{},setAttribute(){}}),body:{append(el){if(!banner)banner=el;}}},
+ document:{createElement:()=>({style:{},children:[],setAttribute(){},append(...items){this.children.push(...items)},set textContent(value){this.text=value},get textContent(){return this.text??this.children.map(item=>item.textContent??'').join('')}}),body:{append(el){if(!banner)banner=el;}}},
  window:{addEventListener(){}}};
  const source=readFileSync(path.join(__dirname,'cloud-game.js'),'utf8').replace(/await import\('[^']+'\)/,'await mockImport()');
  await vm.runInNewContext('(async()=>{'+source+'})()',context);
  assert.equal(context.window._1sGsdG.getItem('neon-drift-points'),'0');
+ let stopped=false;
+ banner.children[1].onclick({stopPropagation(){stopped=true}});
+ assert(stopped); assert.equal(banner.hidden,true);
  assert.equal(await context.window.ndCloud.start('hard'),true);
+ assert.equal(banner.hidden,true,'Routine messages stay dismissed');
  failSave=true;
  await context.window.ndCloud.finish(123,2.25,10);
  assert.match(banner.textContent,/Not saved/);
+ assert.equal(banner.hidden,false,'Save errors reappear');
  failSave=false;
  await context.window.ndCloud.start('normal');
  const finishes=calls.filter(c=>c.name==='nd_finish');

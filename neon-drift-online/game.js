@@ -537,6 +537,8 @@
   async function start() {
     ensureAudio();
     if (window.ndCloud && !await window.ndCloud.start(difficulty)) return;
+    clearLevelUpAnimation();
+    lastShownPilotLevel = getPilotLevel();
     setMusicMode('game');
     unlockAchievement('played');
     state = fresh(); status = 'playing';
@@ -596,6 +598,7 @@
   }
 
   function returnToMenu() {
+    clearLevelUpAnimation();
     const returningFromDeath = status === 'over';
     const finishReturn = () => {
       status = 'ready'; state = fresh(); keys.clear(); setMusicMode('menu');
@@ -639,10 +642,6 @@
       : `${maxLevel === pilotLevel ? 'MAX · ' : ''}${Math.floor(displayedLifetimePoints).toLocaleString()} PTS`;
     ui.pilotProgressFill.style.width = `${levelProgress * 100}%`;
     ui.pilotProgress.setAttribute('aria-valuenow', Math.round(levelProgress * 100));
-    if (status === 'playing' && pilotLevel > lastShownPilotLevel) {
-      showLevelUpAnimation(lastShownPilotLevel, pilotLevel);
-      lastShownPilotLevel = pilotLevel;
-    }
   }
 
   function boost() {
@@ -1303,18 +1302,35 @@
     }, 2600);
   }
 
-  function showLevelUpAnimation(previousLevel, newLevel) {
+  function clearLevelUpAnimation() {
     if (levelUpTimer) clearTimeout(levelUpTimer);
-    ui.levelUpNumber.textContent = newLevel;
-    const levelsGained = newLevel - previousLevel;
-    ui.levelUpCaption.textContent = levelsGained > 1 ? `${levelsGained} LEVELS GAINED` : 'PILOT RANK INCREASED';
+    levelUpTimer = null;
     ui.levelUpCelebration.classList.remove('show');
-    void ui.levelUpCelebration.offsetWidth;
-    ui.levelUpCelebration.classList.add('show');
-    levelUpTimer = setTimeout(() => {
+  }
+
+  function showLevelUpAnimation(previousLevel, newLevel) {
+    clearLevelUpAnimation();
+    let nextLevel = previousLevel + 1;
+    const total = newLevel - previousLevel;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function celebrateNext() {
+      if (status !== 'over' || nextLevel > newLevel) { clearLevelUpAnimation(); return; }
+      ui.levelUpNumber.textContent = nextLevel;
+      ui.levelUpCaption.textContent = total > 1
+        ? `${nextLevel - previousLevel} / ${total} RANKS EARNED · LVL ${previousLevel} → ${newLevel}`
+        : 'PILOT RANK INCREASED';
       ui.levelUpCelebration.classList.remove('show');
-      levelUpTimer = null;
-    }, 2600);
+      void ui.levelUpCelebration.offsetWidth;
+      ui.levelUpCelebration.classList.add('show');
+      tone('orb');
+      nextLevel += 1;
+      levelUpTimer = setTimeout(() => {
+        ui.levelUpCelebration.classList.remove('show');
+        levelUpTimer = setTimeout(celebrateNext, 200);
+      }, reducedMotion ? 1200 : 2600);
+    }
+    // Let the death screen settle before the first earned rank arrives.
+    levelUpTimer = setTimeout(celebrateNext, 450);
   }
 
   function renderAchievements() {
@@ -1344,6 +1360,7 @@
   }
 
   function confirmAchievementReset() {
+    clearLevelUpAnimation();
     lifetimePoints = 0; lastShownPilotLevel = 0; unlockedAchievements.clear(); toastQueue = []; toastActive = false;
     ui.achievementToast.classList.remove('show');
     _1sGsdG.setItem('neon-drift-lifetime-points', '0');

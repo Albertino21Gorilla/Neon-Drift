@@ -12,7 +12,7 @@ In your Supabase project's SQL Editor, open a new query, paste setup.sql and Run
 
 ## Auth setup
 
-Google OAuth must be enabled. The production Site URL and allowed redirect URL are https://albertino21gorilla.github.io/Neon-Drift/. If Google remains in testing mode, add your account to its test users. Publish Google OAuth before inviting the public. The publishable key in online.js is public; never add service_role or Google secrets to this folder.
+Google OAuth must be enabled. The production Site URL and allowed redirect URL are https://albertinothecoder.github.io/Neon-Drift/. If Google remains in testing mode, add your account to its test users. Publish Google OAuth before inviting the public. The publishable key in online.js is public; never add service_role or Google secrets to this folder.
 
 ## Next implementation requirement
 
@@ -20,7 +20,7 @@ Add a server-validated run protocol before enabling rewards. Reject arbitrary sc
 
 ## Separate login test
 
-Add https://albertino21gorilla.github.io/Neon-Drift/neon-drift-online/ to Supabase Authentication > URL Configuration > Redirect URLs. Leave the main Site URL unchanged. Upload this entire neon-drift-online folder into the existing GitHub repository, preserving the folder name. Open the same preview URL after Pages deploys. This does not replace the root game. Only Google login, profile reads, and practice are ready to test. Do not move these preview files to the repository root.
+Add https://albertinothecoder.github.io/Neon-Drift/neon-drift-online/ to Supabase Authentication > URL Configuration > Redirect URLs. Leave the main Site URL unchanged. Upload this entire neon-drift-online folder into the existing GitHub repository, preserving the folder name. Open the same preview URL after Pages deploys. This does not replace the root game. Only Google login, profile reads, and practice are ready to test. Do not move these preview files to the repository root.
 
 ## Preview files
 

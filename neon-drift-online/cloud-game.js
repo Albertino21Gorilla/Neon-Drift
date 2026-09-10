@@ -2,10 +2,27 @@
 const values = new Map();
 window._1sGsdG = { getItem: k => values.get(k) ?? null, setItem: (k,v) => values.set(k,String(v)) };
 const banner = document.createElement('div');
-banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#101b30;color:#d9fffa;padding:8px;text-align:center;font:13px system-ui';
+banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#101b30;color:#d9fffa;padding:8px 44px;text-align:center;font:13px system-ui';
 banner.setAttribute('role','status');
+const bannerMessage = document.createElement('span');
+const dismissBanner = document.createElement('button');
+dismissBanner.type = 'button';
+dismissBanner.textContent = '×';
+dismissBanner.setAttribute('aria-label','Dismiss account status');
+dismissBanner.title = 'Dismiss account status';
+dismissBanner.style.cssText='position:absolute;right:4px;top:0;width:34px;height:100%;border:0;background:transparent;color:#d9fffa;font:24px system-ui;cursor:pointer';
+let bannerDismissed = false;
+dismissBanner.onclick = event => {
+ event.stopPropagation();
+ bannerDismissed = true;
+ banner.hidden = true;
+};
+banner.append(bannerMessage,dismissBanner);
 document.body.append(banner);
-const say = text => banner.textContent=text;
+const say = (text, important = false) => {
+ bannerMessage.textContent=text;
+ banner.hidden=bannerDismissed && !important;
+};
 say('Connecting to your account…');
 let client, userId, run, pending, saving, busy=false;
 function seed(p) {
@@ -35,20 +52,20 @@ window.ndCloud={
  async start(difficulty) {
   if(busy) return false; busy=true;
   try { await flush(); run=await rpc('nd_start',{p_difficulty:difficulty}); say('Online run · Rewards saved when the run ends'); return true; }
-  catch(e){say(e.message);return false;}finally{busy=false;}
+  catch(e){say(e.message,true);return false;}finally{busy=false;}
  },
  finish(score,energy,seconds) {
   pending={p_run:run,p_score:score,p_energy:energy,p_seconds:seconds};
   say('Saving your run…');
-  return flush().catch(e=>{say('Not saved: '+e.message+' · Click here to retry before leaving.');});
+  return flush().catch(e=>{say('Not saved: '+e.message+' · Click here to retry before leaving.',true);});
  },
  async buy(kind,item) {
   if(busy)return;busy=true;
   try{await flush();seed(await rpc('nd_buy',{p_kind:kind,p_item:item}));say('Purchase / equipment saved ✓');}
-  catch(e){say(e.message);}finally{busy=false;}
+  catch(e){say(e.message,true);}finally{busy=false;}
  }
 };
-banner.onclick=()=>{if(pending)flush().catch(e=>say('Still not saved: '+e.message));};
+banner.onclick=()=>{if(pending)flush().catch(e=>say('Still not saved: '+e.message,true));};
 window.addEventListener('beforeunload',e=>{if(pending){e.preventDefault();e.returnValue='';}});
 try {
  const {createClient}=await import('https://esm.sh/@supabase/supabase-js@2.57.4');
@@ -60,7 +77,7 @@ try {
   if(!p.inventory)throw new Error('Run cloud-v2.sql in Supabase first.');
   seed(p);
   const script=document.createElement('script');script.src='game.js?v=cloud-v2';
-  script.onload=()=>say('Account loaded · Ready to fly');script.onerror=()=>say('Game failed to load. Refresh to retry.');
+  script.onload=()=>say('Account loaded · Ready to fly');script.onerror=()=>say('Game failed to load. Refresh to retry.',true);
   document.body.append(script);
  }
-}catch(e){say('Cannot load your account: '+e.message);}
+}catch(e){say('Cannot load your account: '+e.message,true);}
