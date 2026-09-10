@@ -39,6 +39,24 @@ This folder is the complete repository layout to upload. The online callback URL
 
 When updating the existing GitHub repository, upload the two folders plus this README and the root index.html. Once the local folder is uploaded, delete only the obsolete root game.js and 1sGsdG.js using GitHub; uploads do not remove old files. Those files remain in neon-drift-local and in Git history. Do not remove the root index.html or the online folder.
 
+## License & Notice
+
+Neon Drift is source-available under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). See [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+**You can:**
+
+- Play, study, and modify the game for noncommercial purposes.
+- Share the original game or upload your own modified version for permitted purposes, while passing on the license terms (or their URL) and every Required Notice.
+
+**You cannot:**
+
+- Sell the game or use it commercially without separate permission, except where the license expressly permits a purpose.
+- Distribute copies without the required notices, including credit to [AlbertinoTheCoder](https://github.com/AlbertinoTheCoder) and the [original Neon Drift repository](https://github.com/AlbertinoTheCoder/Neon-Drift).
+
+The license also expressly permits certain organizational uses; see its Noncommercial Organizations section. Credit alone does not grant commercial permission. An on-screen credits button is welcome but is not required by this license. Third-party materials retain their own licenses.
+
+For separate permission, contact **neondriftbusiness@gmail.com**. This is a summary; the full license controls. Because commercial uses are restricted, this is not an OSI-approved open-source license.
+
 ## Credits
 
 Created by AlbertinoTheCoder with ChatGPT.
